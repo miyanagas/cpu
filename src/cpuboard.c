@@ -23,32 +23,24 @@ int step(Cpub *cpub)
 
 	cpub->ir = cpub->mem[cpub->mar];
 
-	if (cpub->ir >= 0x70 && cpub->ir <= 0x7f)
+	switch (op_code(cpub->ir))
 	{
+	case ST:
 		return store(cpub);
-	}
-	else if (cpub->ir >= 0xc0 && cpub->ir <= 0xcf)
-	{
+	case EOR:
 		return eor(cpub);
-	}
-	else if (cpub->ir >= 0xb0 && cpub->ir <= 0xbf)
-	{
+	case ADD:
 		return add(cpub);
-	}
-	else if (cpub->ir >= 0xa0 && cpub->ir <= 0xaf)
-	{
+	case SUB:
 		return sub(cpub);
-	}
-	else if (cpub->ir >= 0x30 && cpub->ir <= 0x3f)
-	{
+	case B:
 		return branch(cpub);
-	}
-	else if (cpub->ir >= 0x0c && cpub->ir <= 0x0f)
-	{
-		return RUN_HALT;
-	}
-	else
-	{
+	case 0x0:
+		if ((cpub->ir >> 2) == 0x3)
+			return RUN_HALT;
+		else if (op_A(cpub->ir) == 0x0)
+			return RUN_STEP;
+	default:
 		fprintf(stderr, "Unexecutable Instruction.\n");
 		return RUN_HALT;
 	}
@@ -62,50 +54,34 @@ int store(Cpub *cpub)
 	cpub->mar = cpub->pc;
 	cpub->pc++;
 
-	if (cpub->ir >= 0x70 && cpub->ir <= 0x77) /* A=0 */
+	switch (op_B(cpub->ir))
 	{
-		switch (cpub->ir)
-		{
-		case 0x74: /* B=100 */
-			cpub->mar = cpub->mem[cpub->mar];
-			break;
-		case 0x75: /* B=101 */
-			cpub->mar = cpub->mem[cpub->mar] | 0x100;
-			break;
-		case 0x76: /* B=110 */
-			cpub->mar = cpub->mem[cpub->mar] + cpub->ix;
-			break;
-		case 0x77: /* B=111 */
-			cpub->mar = (cpub->mem[cpub->mar] + cpub->ix) | 0x100;
-			break;
-		default:
-			fprintf(stderr, "Unexecutable Instruction.\n");
-			return RUN_HALT;
-		}
+	case 0x04: /* B=100 */
+		cpub->mar = cpub->mem[cpub->mar];
+		break;
+	case 0x05: /* B=101 */
+		cpub->mar = cpub->mem[cpub->mar] | 0x100;
+		break;
+	case 0x06: /* B=110 */
+		cpub->mar = cpub->mem[cpub->mar] + cpub->ix;
+		break;
+	case 0x07: /* B=111 */
+		cpub->mar = (cpub->mem[cpub->mar] + cpub->ix) | 0x100;
+		break;
+	default:
+		fprintf(stderr, "Unexecutable Instruction.\n");
+		return RUN_HALT;
+	}
+
+	if (op_A(cpub->ir) == 0) /* A=0 */
+	{
 		cpub->mem[cpub->mar] = cpub->acc;
 	}
 	else /* A=1 */
 	{
-		switch (cpub->ir)
-		{
-		case 0x7c: /* B=100 */
-			cpub->mar = cpub->mem[cpub->mar];
-			break;
-		case 0x7d: /* B=101 */
-			cpub->mar = cpub->mem[cpub->mar] | 0x100;
-			break;
-		case 0x7e: /* B=110 */
-			cpub->mar = cpub->mem[cpub->mar] + cpub->ix;
-			break;
-		case 0x7f: /* B=111 */
-			cpub->mar = (cpub->mem[cpub->mar] + cpub->ix) | 0x100;
-			break;
-		default:
-			fprintf(stderr, "Unexecutable Instruction.\n");
-			return RUN_HALT;
-		}
 		cpub->mem[cpub->mar] = cpub->ix;
 	}
+
 	return RUN_STEP;
 }
 
@@ -476,4 +452,19 @@ int branch(Cpub *cpub)
 		break;
 	}
 	return RUN_STEP;
+}
+
+Uword op_code(Uword ir)
+{
+	return (ir >> 4);
+}
+
+Uword op_A(Uword ir)
+{
+	return ((ir >> 3) & 0x01);
+}
+
+Uword op_B(Uword ir)
+{
+	return (ir & 0x07);
 }

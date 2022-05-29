@@ -47,9 +47,18 @@ typedef struct cpuboard
  *===========================================================================*/
 #define RUN_HALT 0
 #define RUN_STEP 1
+#define ST 0x7
+#define EOR 0xc
+#define ADD 0xb
+#define SUB 0xa
+#define B 0x3
 int step(Cpub *);
 int store(Cpub *);
 int eor(Cpub *);
 int add(Cpub *);
 int sub(Cpub *);
 int branch(Cpub *);
+
+Uword op_code(Uword ir);
+Uword op_A(Uword ir);
+Uword op_B(Uword ir);
