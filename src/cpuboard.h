@@ -51,7 +51,8 @@ typedef struct cpuboard
 #define EOR 0xc
 #define ADD 0xb
 #define SUB 0xa
-#define B 0x3
+#define Branch 0x3
+
 int step(Cpub *);
 int store(Cpub *);
 int eor(Cpub *);
@@ -62,3 +63,7 @@ int branch(Cpub *);
 Uword op_code(Uword ir);
 Uword op_A(Uword ir);
 Uword op_B(Uword ir);
+Uword overflow_flag(Sword A, Sword B, Sword result);
+Uword carry_flag(unsigned short result);
+Uword negative_flag(Uword result);
+Uword zero_flag(Uword result);
