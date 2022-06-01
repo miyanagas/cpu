@@ -160,33 +160,26 @@ int add(Cpub *cpub)
 	case 0x1: /* B=001 */
 		B = cpub->ix;
 		break;
-	case 0x4: /* B=100 */
+	default:
 		cpub->mar = cpub->pc;
 		cpub->pc++;
-		cpub->mar = cpub->mem[cpub->mar];
-		B = cpub->mem[cpub->mar];
-		break;
-	case 0x5: /* B=101 */
-		cpub->mar = cpub->pc;
-		cpub->pc++;
-		cpub->mar = cpub->mem[cpub->mar] | 0x100;
-		B = cpub->mem[cpub->mar];
-		break;
-	case 0x6: /* B=110 */
-		cpub->mar = cpub->pc;
-		cpub->pc++;
-		cpub->mar = cpub->mem[cpub->mar] + cpub->ix;
-		B = cpub->mem[cpub->mar];
-		break;
-	case 0x7: /* B=111 */
-		cpub->mar = cpub->pc;
-		cpub->pc++;
-		cpub->mar = (cpub->mem[cpub->mar] + cpub->ix) | 0x100;
-		B = cpub->mem[cpub->mar];
-		break;
-	default: /* B=01- */
-		cpub->mar = cpub->pc;
-		cpub->pc++;
+		switch (op_B(cpub->ir))
+		{
+		case 0x4: /* B=100 */
+			cpub->mar = cpub->mem[cpub->mar];
+			break;
+		case 0x5: /* B=101 */
+			cpub->mar = cpub->mem[cpub->mar] | 0x100;
+			break;
+		case 0x6: /* B=110 */
+			cpub->mar = cpub->mem[cpub->mar] + cpub->ix;
+			break;
+		case 0x7: /* B=111 */
+			cpub->mar = (cpub->mem[cpub->mar] + cpub->ix) | 0x100;
+			break;
+		default: /* B=01- */
+			break;
+		}
 		B = cpub->mem[cpub->mar];
 		break;
 	}
