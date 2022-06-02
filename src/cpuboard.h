@@ -47,23 +47,36 @@ typedef struct cpuboard
  *===========================================================================*/
 #define RUN_HALT 0
 #define RUN_STEP 1
+#define LD 0x6
 #define ST 0x7
+
+#define AND 0xe
+#define OR 0xd
 #define EOR 0xc
 #define ADD 0xb
 #define SUB 0xa
+#define CMP 0xf
+#define ShiftRotate 0x4
 #define Branch 0x3
+#define BNZ 0x31
+#define BZ 0x39
 
 int step(Cpub *);
+int load(Cpub *);
 int store(Cpub *);
-int eor(Cpub *);
+int and (Cpub *);
+int or (Cpub *);
+int exclusive_or(Cpub *);
 int add(Cpub *);
-int sub(Cpub *);
+int subtract(Cpub *);
+int compare(Cpub *);
+int shift(Cpub *);
 int branch(Cpub *);
 
-Uword op_code(Uword ir);
-Uword op_A(Uword ir);
-Uword op_B(Uword ir);
-Uword overflow_flag(Sword A, Sword B, Sword result);
-Uword carry_flag(unsigned short result);
-Uword negative_flag(Uword result);
-Uword zero_flag(Uword result);
+Uword op_code(Uword);
+Uword op_A(Uword);
+Uword op_B(Uword);
+Uword get_B(Cpub *);
+Uword overflow_flag(Sword, Sword, Sword);
+Uword negative_flag(Uword);
+Uword zero_flag(Uword);
