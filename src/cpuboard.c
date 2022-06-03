@@ -137,8 +137,7 @@ int exclusive_or(Cpub *cpub)
  *===========================================================================*/
 int add(Cpub *cpub)
 {
-	unsigned short result;
-	Uword A, B;
+	Uword result, A, B;
 
 	B = get_B(cpub);
 
@@ -167,8 +166,7 @@ int add(Cpub *cpub)
  *===========================================================================*/
 int subtract(Cpub *cpub)
 {
-	unsigned short result;
-	Uword A, B;
+	Uword result, A, B;
 
 	B = get_B(cpub);
 
@@ -301,8 +299,7 @@ int or (Cpub * cpub)
  *===========================================================================*/
 int compare(Cpub *cpub)
 {
-	unsigned short result;
-	Uword A, B;
+	Uword result, A, B;
 
 	B = get_B(cpub);
 
@@ -427,7 +424,7 @@ Uword overflow_flag(Sword A, Sword B, Sword result)
 	}
 	else
 	{
-		return ((unsigned short)result >> 8);
+		return (0x0);
 	}
 }
 
