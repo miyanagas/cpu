@@ -416,7 +416,7 @@ Uword get_B(Cpub *cpub)
 	}
 }
 
-Uword overflow_flag(Sword A, Sword B, Sword result)
+Bit overflow_flag(Sword A, Sword B, Sword result)
 {
 	if (((A >> 7) == (B >> 7)) && ((A >> 7) != (result >> 7)))
 	{
@@ -428,12 +428,12 @@ Uword overflow_flag(Sword A, Sword B, Sword result)
 	}
 }
 
-Uword negative_flag(Uword result)
+Bit negative_flag(Uword result)
 {
 	return (result >> 7);
 }
 
-Uword zero_flag(Uword result)
+Bit zero_flag(Uword result)
 {
 	if (result == 0x00)
 	{
