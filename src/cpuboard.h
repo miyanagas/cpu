@@ -47,9 +47,9 @@ typedef struct cpuboard
  *===========================================================================*/
 #define RUN_HALT 0
 #define RUN_STEP 1
+
 #define LD 0x6
 #define ST 0x7
-
 #define AND 0xe
 #define OR 0xd
 #define EOR 0xc
