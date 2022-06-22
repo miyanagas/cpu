@@ -340,6 +340,14 @@ int shift(Cpub *cpub)
 
 	switch (cpub->ir & 0x03)
 	{
+	case 0x0: /* SRA */
+		cpub->cf = A & 0x1;
+		result = (Sword)A >> 1;
+		break;
+	case 0x1: /* SLA */
+		cpub->cf = A >> 7;
+		result = (Sword)A << 1;
+		break;
 	case 0x2: /* SRL */
 		cpub->cf = A & 0x1;
 		result = A >> 1;
@@ -348,9 +356,6 @@ int shift(Cpub *cpub)
 		cpub->cf = A >> 7;
 		result = A << 1;
 		break;
-	default:
-		fprintf(stderr, "Unexecutable Instruction.\n");
-		return RUN_HALT;
 	}
 
 	if (op_A(cpub->ir) == 0) /* A=0 */
